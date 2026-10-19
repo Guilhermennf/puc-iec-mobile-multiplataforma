@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /favorites/{documentId} {
+      allow read, write: if documentId == 'meus-favoritos'
+        && request.time < timestamp.date(2026, 11, 18);
+    }
+  }
+}
