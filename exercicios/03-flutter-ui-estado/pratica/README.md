@@ -54,3 +54,22 @@ Fork + PR no repo público; link no Canvas. O **J.A.R.V.I.S.** lê o seu código
 Sem chave, o app usa a lista simulada (5 filmes). Para filmes reais: copie `.env.local.example` → `.env.local`,
 cole sua chave do TMDB (`TMDB_KEY=...`) e rode `./rodar.sh` / `rodar.bat` (ou F5 → "dados reais TMDB").
 O `.env.local` não vai pro git. Os testes (`flutter test`) nunca usam a chave.
+
+## Trade-offs: local, cloud e offline-first
+
+O Riverpod mantém os favoritos no estado local para que a interface responda imediatamente. O Firestore persiste essa lista na nuvem, permitindo recuperá-la depois de um refresh e sincronizá-la entre dispositivos, com a contrapartida de depender da configuração do projeto e da rede para consultar o serviço. A lista de filmes usa cache local com TTL: o app mostra primeiro os dados salvos e atualiza pela fonte remota quando o cache vence; sem rede, continua mostrando o cache e sinaliza o modo offline. Assim, a interface continua útil sem conexão, enquanto a nuvem mantém os favoritos compartilhados.
+
+## Configurar o Firebase
+
+Cada aluno deve usar o próprio projeto Firebase. Ative o Firestore e configure as regras de leitura e escrita descritas no enunciado. Depois, gere as opções web para este app:
+
+```bash
+dart pub global activate flutterfire_cli
+flutterfire configure --platforms=web
+```
+
+O comando gera `lib/firebase_options.dart`. Sem essa configuração, o app e os testes continuam funcionando com o estado local, mas os favoritos não serão persistidos no Firestore. A persistência offline do Firestore é habilitada no `main.dart`.
+
+## Prova de persistência
+
+Depois de configurar o Firebase, favorite um filme no navegador e atualize a página com `F5`. Inclua no PR um GIF ou captura real mostrando que o favorito continuou salvo após o refresh; essa evidência é conferida manualmente. Se quiser, inclua também uma captura do banner offline com a lista em cache.
