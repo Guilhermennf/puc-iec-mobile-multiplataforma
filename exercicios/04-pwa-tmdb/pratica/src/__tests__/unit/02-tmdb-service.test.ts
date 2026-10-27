@@ -23,7 +23,9 @@ describe('fetchPopularMovies', () => {
 
     expect(tmdbClient.get).toHaveBeenCalledWith(
       '/movie/popular',
-      expect.objectContaining({ params: expect.objectContaining({ language: 'pt-BR' }) }),
+      expect.objectContaining({
+        params: expect.objectContaining({ language: 'pt-BR', page: 1 }),
+      }),
     );
     expect(response.results).toHaveLength(2);
     expect(response.results[0].title).toBe('Matrix');
@@ -35,5 +37,18 @@ describe('fetchPopularMovies', () => {
     await expect(fetchPopularMovies()).rejects.toThrow('401');
   });
 
-  it.todo('3. inclui param page=1 na chamada');
+  it('3. inclui a página solicitada na chamada', async () => {
+    vi.spyOn(tmdbClient, 'get').mockResolvedValue({
+      data: { results: fakeMovies, page: 3, total_pages: 5, total_results: 100 },
+    });
+
+    await fetchPopularMovies(3);
+
+    expect(tmdbClient.get).toHaveBeenCalledWith(
+      '/movie/popular',
+      expect.objectContaining({
+        params: expect.objectContaining({ language: 'pt-BR', page: 3 }),
+      }),
+    );
+  });
 });

@@ -1,24 +1,54 @@
-// src/components/UpdatePrompt.tsx
-// ✅ AVALIATIVO — TODO 3 (parte 2)
-//
-// O app já renderiza <UpdatePrompt /> em App.tsx. Seu trabalho é fazer ele funcionar.
-//
-// Use o hook do vite-plugin-pwa:
-//   import { useRegisterSW } from 'virtual:pwa-register/react';
-//
-// Ele devolve dois estados (cada um é um par [valor, setter]) e uma função:
-//   - offlineReady  → true quando o app terminou de ser cacheado ("já funciona offline")
-//   - needRefresh   → true quando existe uma NOVA versão esperando (SW em "waiting")
-//   - updateServiceWorker(true) → ativa a nova versão e recarrega a página
-//
-// O que o componente deve mostrar:
-//   1. offlineReady  → aviso "App pronto para uso offline" + botão para dispensar (setOfflineReady(false))
-//   2. needRefresh   → aviso "Nova versão disponível" + botão "Atualizar" (updateServiceWorker(true))
-//                      + botão "Depois" que dispensa o aviso (setNeedRefresh(false))
-//   3. nenhum dos dois → não renderiza nada (return null)
-//
-// ⚠️ Só funciona com registerType: 'prompt' (TODO 3, parte 1) e no BUILD (npm run build && npm run preview).
+import { useRegisterSW } from 'virtual:pwa-register/react';
 
 export function UpdatePrompt() {
-  return null; // TODO 3 — implemente
+  const {
+    offlineReady: [offlineReady, setOfflineReady],
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW();
+
+  const dismiss = () => {
+    setOfflineReady(false);
+    setNeedRefresh(false);
+  };
+
+  if (!offlineReady && !needRefresh) return null;
+
+  return (
+    <aside
+      role="status"
+      aria-live="polite"
+      style={{
+        position: 'fixed',
+        right: 16,
+        bottom: 88,
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 12,
+        maxWidth: 'min(440px, calc(100vw - 32px))',
+        padding: '14px 16px',
+        borderRadius: 12,
+        background: '#0d253f',
+        color: '#fff',
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+      }}
+    >
+      <span>{needRefresh ? 'Nova versão disponível' : 'App pronto para uso offline'}</span>
+      {needRefresh ? (
+        <>
+          <button type="button" onClick={() => void updateServiceWorker(true)}>
+            Atualizar
+          </button>
+          <button type="button" onClick={dismiss}>
+            Depois
+          </button>
+        </>
+      ) : (
+        <button type="button" onClick={dismiss} aria-label="Fechar aviso">
+          Fechar
+        </button>
+      )}
+    </aside>
+  );
 }
