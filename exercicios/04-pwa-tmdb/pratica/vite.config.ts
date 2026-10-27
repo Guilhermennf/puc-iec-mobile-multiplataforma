@@ -43,7 +43,7 @@ export default defineConfig({
             },
           },
           {
-            urlPattern: /^https:\/\/image\.themoviedb\.org\//,
+            urlPattern: /^https:\/\/image\.tmdb\.org\//,
             handler: 'CacheFirst',
             options: {
               cacheName: 'tmdb-images',

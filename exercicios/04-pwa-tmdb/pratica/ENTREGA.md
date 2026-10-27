@@ -8,21 +8,38 @@
 
 ## 1. Site comum × PWA — o que eu vi
 
-Compare `https://pwa-tmdb-aula4.vercel.app` com um site comum (por exemplo, themoviedb.org): tente abrir sem conexão, feche e reabra, e instale o PWA. Preencha as diferenças que você observou.
+Comparei o PWA publicado pelo professor (`https://pwa-tmdb-aula4.vercel.app`) com o site comum (`https://www.themoviedb.org`). Observei as diferenças abaixo; para o teste offline, carreguei os sites primeiro e selecionei **Offline** em DevTools → Network.
 
 | # | Site comum | PWA | Print/evidência |
 |---|---|---|---|
-| 1 | Preencher após comparar | Preencher após comparar | `evidencias/01-comparacao.png` |
-| 2 | Preencher após comparar | Preencher após comparar | `evidencias/01-comparacao.png` |
-| 3 | Preencher após comparar | Preencher após comparar | `evidencias/01-comparacao.png` |
+| 1 | O TMDB abriu como site tradicional, com cabeçalho, busca e áreas como tendências. | O PWA mostrou uma interface de filmes com navegação inferior Início, Buscar e Favoritos, além do aviso “App pronto para uso offline”. | [Site comum online](evidencias/03-site-comum-online.png) · [PWA online](evidencias/01-demo-pwa-online.png) |
+| 2 | Ao recarregar sem conexão, o navegador exibiu `ERR_INTERNET_DISCONNECTED`. | Após recarregar com Network em Offline, o PWA continuou mostrando os filmes; a chamada de filmes aparece servida pelo cache de disco. | [Site comum offline](evidencias/11-site-comum-offline.png) · [PWA recarregado offline](evidencias/10-demo-pwa-recarregado-offline.png) |
+| 3 | O site comum não manteve a página disponível após a recarga offline. | Na captura offline do PWA, os títulos e descrições continuam, enquanto os pôsteres externos não carregam. | [Erro do site comum](evidencias/11-site-comum-offline.png) · [PWA offline](evidencias/02-demo-pwa-offline.png) |
 
 ## 2. Prova do offline no meu build
 
-- [ ] Print do DevTools → Application → Cache Storage com `tmdb-api` e `tmdb-images` contendo itens.
-- [ ] Print do app carregando a lista em modo Offline.
-- [ ] Print de “Nova versão disponível” ou explicação de por que não foi possível reproduzir.
+- [x] DevTools → Application → Cache Storage: [cache da API `tmdb-api`, com 3 entradas](evidencias/04-cache-storage.png) · [cache de pôsteres `tmdb-images`, com 48 imagens](evidencias/04b-cache-storage-images.jpg).
+- [x] Build local em modo offline: [Network em Offline e lista renderizada](evidencias/08-app-offline-network.png) · [estado Offline com dados do IndexedDB](evidencias/07-meu-build-offline.png) · [Favoritos com banner offline](evidencias/09-favoritos-offline.png).
+- [x] Aviso de atualização: [“Nova versão disponível”, com Atualizar e Depois](evidencias/05-nova-versao.png). Esta captura está recortada ao aviso.
 
-Coloque as capturas na pasta `evidencias/` e referencie os arquivos aqui. Para reproduzir, rode `npm run build` e `npm run preview`, abra `http://localhost:4173`, carregue filmes e pôsteres e então ative Network → Offline no DevTools.
+Na captura do Cache Storage, `tmdb-api` contém 3 respostas e `tmdb-images` contém 48 imagens JPEG de `image.tmdb.org`. A lista de filmes também foi conferida online no build local em [06](evidencias/06-meu-build-online.png).
+
+### Índice das evidências
+
+| # | O que o print mostra |
+|---|---|
+| 01 | PWA do professor online, com lista de filmes e aviso de uso offline. |
+| 02 | PWA do professor offline: títulos e descrições permanecem, pôsteres externos não carregam. |
+| 03 | Site comum TMDB online, com cabeçalho, busca e tendências. |
+| 04 | DevTools → Application → Cache Storage, cache `tmdb-api`, 3 entradas. |
+| 04b | DevTools → Application → Cache Storage, cache `tmdb-images`, 48 imagens. |
+| 05 | Aviso de nova versão com as ações Atualizar e Depois; captura recortada. |
+| 06 | Build local online, com pôsteres e lista de filmes. |
+| 07 | Build local em estado Offline, exibindo dados do IndexedDB. |
+| 08 | Build local com Network em Offline e interface de filmes ainda renderizada. |
+| 09 | Aba Favoritos do build local com o banner de offline. |
+| 10 | PWA do professor após recarga offline; a chamada da API foi servida do cache de disco. |
+| 11 | Site comum após recarga offline, com `ERR_INTERNET_DISCONNECTED`. |
 
 ## 3. Reflexão (5–8 linhas)
 
