@@ -1,0 +1,60 @@
+name: Build — Ghibli KMP (projeto final, roda no SEU repo)
+
+# CI do GRUPO: a cada push que mexe no app, roda os testes unitários e o build debug.
+# É a checagem do critério eliminatório do enunciado: "app que não builda = Funcionalidade zerada".
+# SEM segredos e SEM pull_request_target: roda o código do próprio repositório, com permissão só de leitura.
+#
+# Se o app for movido para a raiz de um repo novo do grupo, copie este arquivo para
+# .github/workflows/ do repo novo e troque `ghibli-kmp` por `.` nos paths e no working-directory.
+on:
+  push:
+    paths:
+      - 'ghibli-kmp/**'
+      - '.github/workflows/ghibli-kmp-build.yml'
+  pull_request:
+    paths:
+      - 'ghibli-kmp/**'
+      - '.github/workflows/ghibli-kmp-build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: ghibli-kmp
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # O bit de execução do gradlew se perde em alguns commits feitos no Windows.
+      - run: chmod +x gradlew
+
+      - name: Testes unitários (módulo shared)
+        run: ./gradlew :shared:testDebugUnitTest
+
+      - name: Build debug (androidApp)
+        run: ./gradlew :androidApp:assembleDebug
+
+      - name: Guarda o relatório de testes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-de-testes
+          path: ghibli-kmp/shared/build/reports/tests/
+          if-no-files-found: ignore
+
+      - name: Guarda o APK debug
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghibli-debug-apk
+          path: ghibli-kmp/androidApp/build/outputs/apk/debug/*.apk
+          if-no-files-found: warn

@@ -1,0 +1,15 @@
+# Feature 2 — navegação lista → detalhe
+appId: com.puciec.ghiblikmp
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "item-list-screen"
+    timeout: 20000
+- tapOn:
+    id: "item-card-2baf70d1-42bb-4437-b551-e5fed5a87abe"
+- assertVisible:
+    id: "detail-screen"
+- assertVisible:
+    id: "detail-title"
+- assertVisible: "Castle in the Sky"

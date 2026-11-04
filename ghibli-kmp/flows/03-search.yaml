@@ -1,0 +1,13 @@
+# Feature 3 — busca por texto
+appId: com.puciec.ghiblikmp
+---
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "item-list-screen"
+    timeout: 20000
+- tapOn:
+    id: "search-input"
+- inputText: "kiki"
+- assertVisible:
+    id: "item-card-ea660b10-85c4-4ae3-8a5f-41cea3648e3e"
